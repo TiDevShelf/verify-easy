@@ -53,6 +53,11 @@ export const validateAadhaar = (aadhaar: string): { isValid: boolean; message?: 
     return { isValid: false, message: "Aadhaar number is required" };
   }
   
+  // For demo purposes, accept these test numbers directly
+  if (aadhaar === "123456789012" || aadhaar === "234567890123") {
+    return { isValid: true, userData: mockUserData.aadhaar[aadhaar] };
+  }
+  
   if (!aadhaarRegex.test(aadhaar)) {
     return { 
       isValid: false, 
@@ -60,15 +65,10 @@ export const validateAadhaar = (aadhaar: string): { isValid: boolean; message?: 
     };
   }
   
-  // For demo, check if we have mock data for this Aadhaar
+  // For other numbers, check in mockUserData
   const userData = mockUserData.aadhaar[aadhaar];
   if (userData) {
     return { isValid: true, userData };
-  }
-  
-  // For demo purposes, let's consider these test numbers as valid
-  if (aadhaar === "123456789012" || aadhaar === "234567890123") {
-    return { isValid: true, userData: mockUserData.aadhaar[aadhaar] };
   }
   
   return { isValid: false, message: "Aadhaar not found in our records" };
@@ -83,6 +83,11 @@ export const validatePAN = (pan: string): { isValid: boolean; message?: string; 
     return { isValid: false, message: "PAN number is required" };
   }
   
+  // For demo purposes, accept these test numbers directly
+  if (pan === "ABCPD1234E" || pan === "PQRST5678F") {
+    return { isValid: true, userData: mockUserData.pan[pan] };
+  }
+  
   if (!panRegex.test(pan)) {
     return { 
       isValid: false, 
@@ -90,15 +95,10 @@ export const validatePAN = (pan: string): { isValid: boolean; message?: string; 
     };
   }
   
-  // For demo, check if we have mock data for this PAN
+  // For other numbers, check in mockUserData
   const userData = mockUserData.pan[pan];
   if (userData) {
     return { isValid: true, userData };
-  }
-  
-  // For demo purposes, let's consider these test numbers as valid
-  if (pan === "ABCPD1234E" || pan === "PQRST5678F") {
-    return { isValid: true, userData: mockUserData.pan[pan] };
   }
   
   return { isValid: false, message: "PAN not found in our records" };
@@ -110,6 +110,11 @@ export const validateBankAccount = (accountNumber: string): { isValid: boolean; 
     return { isValid: false, message: "Account number is required" };
   }
   
+  // For demo purposes, accept these test numbers directly
+  if (accountNumber === "12345678901" || accountNumber === "98765432109") {
+    return { isValid: true, userData: mockUserData.bank[accountNumber] };
+  }
+  
   // Most bank accounts in India have 9-18 digits
   if (!/^\d{9,18}$/.test(accountNumber)) {
     return { 
@@ -118,15 +123,10 @@ export const validateBankAccount = (accountNumber: string): { isValid: boolean; 
     };
   }
   
-  // For demo, check if we have mock data for this account
+  // For other numbers, check in mockUserData
   const userData = mockUserData.bank[accountNumber];
   if (userData) {
     return { isValid: true, userData };
-  }
-  
-  // For demo purposes, let's consider these test numbers as valid
-  if (accountNumber === "12345678901" || accountNumber === "98765432109") {
-    return { isValid: true, userData: mockUserData.bank[accountNumber] };
   }
   
   return { isValid: false, message: "Bank account not found in our records" };
