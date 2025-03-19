@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { Check, User, Calendar, MapPin, Building } from "lucide-react";
+import { Check, User, Calendar, MapPin, Building, Users } from "lucide-react";
 
 interface UserInfoProps {
   userData: Record<string, string>;
@@ -23,8 +23,10 @@ const UserInfoCard: React.FC<UserInfoProps> = ({ userData, type }) => {
       case 'bank':
       case 'branch':
         return <Building className="h-4 w-4 text-gray-500" />;
+      case 'father':
+        return <Users className="h-4 w-4 text-gray-500" />;
       default:
-        return null;
+        return <User className="h-4 w-4 text-gray-500" />;
     }
   };
 

@@ -53,12 +53,15 @@ export const validateAadhaar = (aadhaar: string): { isValid: boolean; message?: 
     return { isValid: false, message: "Aadhaar number is required" };
   }
   
-  // For demo purposes, accept these test numbers directly
+  // For demo purposes, accept these test numbers directly without further validation
   if (aadhaar === "123456789012" || aadhaar === "234567890123") {
     return { isValid: true, userData: mockUserData.aadhaar[aadhaar] };
   }
   
-  if (!aadhaarRegex.test(aadhaar)) {
+  // Remove spaces or special characters if present in the input
+  const cleanedAadhaar = aadhaar.replace(/\s+/g, "").replace(/-/g, "");
+  
+  if (!aadhaarRegex.test(cleanedAadhaar)) {
     return { 
       isValid: false, 
       message: "Invalid Aadhaar format. It should be a 12-digit number not starting with 0 or 1" 
@@ -66,9 +69,23 @@ export const validateAadhaar = (aadhaar: string): { isValid: boolean; message?: 
   }
   
   // For other numbers, check in mockUserData
-  const userData = mockUserData.aadhaar[aadhaar];
+  const userData = mockUserData.aadhaar[cleanedAadhaar];
   if (userData) {
     return { isValid: true, userData };
+  }
+  
+  // For demo purposes, let's consider any 12-digit number as valid without verification in the demo data
+  if (cleanedAadhaar.length === 12 && !isNaN(Number(cleanedAadhaar))) {
+    // Return a generic user profile for testing
+    return { 
+      isValid: true, 
+      userData: {
+        name: "Demo User",
+        dob: "01-01-1990",
+        gender: "Not Specified",
+        address: "Demo Address, India"
+      }
+    };
   }
   
   return { isValid: false, message: "Aadhaar not found in our records" };
@@ -88,7 +105,10 @@ export const validatePAN = (pan: string): { isValid: boolean; message?: string; 
     return { isValid: true, userData: mockUserData.pan[pan] };
   }
   
-  if (!panRegex.test(pan)) {
+  // Convert to uppercase for validation
+  const cleanedPan = pan.toUpperCase().replace(/\s+/g, "");
+  
+  if (!panRegex.test(cleanedPan)) {
     return { 
       isValid: false, 
       message: "Invalid PAN format. Should be 5 uppercase letters, 4 numbers, and 1 uppercase letter" 
@@ -96,9 +116,21 @@ export const validatePAN = (pan: string): { isValid: boolean; message?: string; 
   }
   
   // For other numbers, check in mockUserData
-  const userData = mockUserData.pan[pan];
+  const userData = mockUserData.pan[cleanedPan];
   if (userData) {
     return { isValid: true, userData };
+  }
+  
+  // For demo purposes, let's consider any valid format PAN as valid
+  if (panRegex.test(cleanedPan)) {
+    return { 
+      isValid: true, 
+      userData: {
+        name: "Demo User",
+        father: "Demo Father",
+        dob: "01-01-1990"
+      }
+    };
   }
   
   return { isValid: false, message: "PAN not found in our records" };
@@ -115,8 +147,11 @@ export const validateBankAccount = (accountNumber: string): { isValid: boolean; 
     return { isValid: true, userData: mockUserData.bank[accountNumber] };
   }
   
+  // Remove spaces if present in the input
+  const cleanedAccountNumber = accountNumber.replace(/\s+/g, "");
+  
   // Most bank accounts in India have 9-18 digits
-  if (!/^\d{9,18}$/.test(accountNumber)) {
+  if (!/^\d{9,18}$/.test(cleanedAccountNumber)) {
     return { 
       isValid: false, 
       message: "Invalid account number format. Should be 9-18 digits" 
@@ -124,12 +159,20 @@ export const validateBankAccount = (accountNumber: string): { isValid: boolean; 
   }
   
   // For other numbers, check in mockUserData
-  const userData = mockUserData.bank[accountNumber];
+  const userData = mockUserData.bank[cleanedAccountNumber];
   if (userData) {
     return { isValid: true, userData };
   }
   
-  return { isValid: false, message: "Bank account not found in our records" };
+  // For demo purposes, consider any account number with valid format as valid
+  return { 
+    isValid: true, 
+    userData: {
+      name: "Demo User",
+      bank: "Demo Bank",
+      branch: "Demo Branch"
+    }
+  };
 };
 
 // IFSC validation
@@ -141,7 +184,10 @@ export const validateIFSC = (ifsc: string): { isValid: boolean; message?: string
     return { isValid: false, message: "IFSC code is required" };
   }
   
-  if (!ifscRegex.test(ifsc)) {
+  // Convert to uppercase and remove spaces
+  const cleanedIFSC = ifsc.toUpperCase().replace(/\s+/g, "");
+  
+  if (!ifscRegex.test(cleanedIFSC)) {
     return { 
       isValid: false, 
       message: "Invalid IFSC format. Should be 4 uppercase letters, 0, and 6 alphanumeric characters" 
@@ -149,7 +195,12 @@ export const validateIFSC = (ifsc: string): { isValid: boolean; message?: string
   }
   
   // For demo purposes, let's consider these test codes as valid
-  if (ifsc === "SBIN0123456" || ifsc === "HDFC0123456") {
+  if (cleanedIFSC === "SBIN0123456" || cleanedIFSC === "HDFC0123456") {
+    return { isValid: true };
+  }
+  
+  // For demo purposes, consider any IFSC with valid format as valid
+  if (ifscRegex.test(cleanedIFSC)) {
     return { isValid: true };
   }
   
