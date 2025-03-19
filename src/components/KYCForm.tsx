@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import { toast } from "sonner";
 import ValidationIndicator from "./ValidationIndicator";
 import DocumentUpload from "./DocumentUpload";
 import FormStepIndicator from "./FormStepIndicator";
+import UserInfoCard from "./UserInfoCard";
 import { 
   simulateApiCall, 
   validateAadhaar, 
@@ -21,6 +23,7 @@ type ValidationStatus = "idle" | "validating" | "valid" | "invalid";
 interface ValidationState {
   status: ValidationStatus;
   message?: string;
+  userData?: any;
 }
 
 const TOTAL_STEPS = 3;
@@ -67,7 +70,7 @@ const KYCForm: React.FC = () => {
     }));
     
     // Immediate basic validation
-    let basicValidation: { isValid: boolean; message?: string };
+    let basicValidation: { isValid: boolean; message?: string; userData?: any };
     
     switch (name) {
       case "aadhaar":
@@ -107,9 +110,14 @@ const KYCForm: React.FC = () => {
           ...prev,
           [name]: { 
             status: result.isValid ? "valid" : "invalid", 
-            message: result.isValid ? "Verified" : result.message 
+            message: result.isValid ? "Verified" : result.message,
+            userData: result.userData
           },
         }));
+        
+        if (result.isValid && result.userData) {
+          toast.success(`${name.charAt(0).toUpperCase() + name.slice(1)} verified successfully!`);
+        }
       });
   };
   
@@ -176,7 +184,7 @@ const KYCForm: React.FC = () => {
                 <Input
                   id="aadhaar"
                   name="aadhaar"
-                  placeholder="Enter 12-digit Aadhaar number"
+                  placeholder="Enter 12-digit Aadhaar number (try: 123456789012)"
                   value={formData.aadhaar}
                   onChange={handleInputChange}
                   className="pr-12"
@@ -190,6 +198,13 @@ const KYCForm: React.FC = () => {
                 </div>
               </div>
             </div>
+            
+            {validationStates.aadhaar.status === "valid" && validationStates.aadhaar.userData && (
+              <UserInfoCard 
+                userData={validationStates.aadhaar.userData} 
+                type="aadhaar" 
+              />
+            )}
             
             <DocumentUpload
               label="Upload Aadhaar Card"
@@ -210,7 +225,7 @@ const KYCForm: React.FC = () => {
                 <Input
                   id="pan"
                   name="pan"
-                  placeholder="Enter 10-character PAN"
+                  placeholder="Enter 10-character PAN (try: ABCPD1234E)"
                   value={formData.pan}
                   onChange={handleInputChange}
                   className="pr-12"
@@ -224,6 +239,13 @@ const KYCForm: React.FC = () => {
                 </div>
               </div>
             </div>
+            
+            {validationStates.pan.status === "valid" && validationStates.pan.userData && (
+              <UserInfoCard 
+                userData={validationStates.pan.userData} 
+                type="pan" 
+              />
+            )}
             
             <DocumentUpload
               label="Upload PAN Card"
@@ -244,7 +266,7 @@ const KYCForm: React.FC = () => {
                 <Input
                   id="accountNumber"
                   name="accountNumber"
-                  placeholder="Enter account number"
+                  placeholder="Enter account number (try: 12345678901)"
                   value={formData.accountNumber}
                   onChange={handleInputChange}
                   className="pr-12"
@@ -258,6 +280,13 @@ const KYCForm: React.FC = () => {
               </div>
             </div>
             
+            {validationStates.accountNumber.status === "valid" && validationStates.accountNumber.userData && (
+              <UserInfoCard 
+                userData={validationStates.accountNumber.userData} 
+                type="bank" 
+              />
+            )}
+            
             <div className="space-y-2">
               <label htmlFor="ifsc" className="text-sm font-medium block">
                 IFSC Code
@@ -266,7 +295,7 @@ const KYCForm: React.FC = () => {
                 <Input
                   id="ifsc"
                   name="ifsc"
-                  placeholder="Enter IFSC code"
+                  placeholder="Enter IFSC code (try: SBIN0123456)"
                   value={formData.ifsc}
                   onChange={handleInputChange}
                   className="pr-12"

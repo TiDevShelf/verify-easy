@@ -11,6 +11,15 @@ const Index: React.FC = () => {
           <p className="text-gray-600 max-w-lg mx-auto">
             Complete your KYC verification by providing your identity and bank details. This is a secure and encrypted process.
           </p>
+          <div className="mt-4 p-3 bg-blue-50 rounded-md inline-block text-left text-sm">
+            <p className="font-medium text-blue-700 mb-1">Demo Credentials:</p>
+            <ul className="text-blue-600 space-y-1">
+              <li><span className="font-medium">Aadhaar:</span> 123456789012</li>
+              <li><span className="font-medium">PAN:</span> ABCPD1234E</li>
+              <li><span className="font-medium">Bank Account:</span> 12345678901</li>
+              <li><span className="font-medium">IFSC:</span> SBIN0123456</li>
+            </ul>
+          </div>
         </div>
         
         <KYCForm />
